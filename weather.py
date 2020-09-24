@@ -2,24 +2,152 @@ from tkinter import *
 from PIL import ImageTk,Image
 from tkinter import messagebox
 import time
+import requests
 
 root = Tk()
 root.title("Weather App")
-root.geometry("600x600")
+root.geometry("600x500")
 root.iconbitmap("images/iconfinder_Weather_Weather_Forecast_Lightning_Storm_Energy_3859139.ico")
 root.resizable(False, False)
 root.configure(background="lightgrey")
 
 def clock():
+    global hour
     day = time.strftime("%A")
+    date = time.strftime("%d") + "/" + time.strftime("%m") + "/" + time.strftime("%Y")
     hour = time.strftime("%H")
     minute = time.strftime("%M")
     second = time.strftime("%S")
 
-    my_clock.config(text=day + " " + hour + ":" + minute + ":" + second)
+    my_clock.config(text=day + "  " + date + " \n" + hour + ":" + minute + ":" + second)
     my_clock.after(1000,clock)
 
-  
+
+def conditions(con):
+    global imgLabel
+    con = con.lower()
+    #Clouds
+    if(con == "few clouds"):
+        global tk_cloudImg
+        if(hour > "18"):
+            Img = Image.open("images/nightCloud.png")
+            tk_cloudImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+            imgLabel.config(image=tk_cloudImg)
+        else:
+            Img = Image.open("images/sunCloud.png")    
+            tk_cloudImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+            imgLabel.config(image=tk_cloudImg)
+    elif(con == "scattered clouds" or con == "broken clouds" or con == "overcast clouds"):
+        global tk_cImg
+        Img = Image.open("images/cloud.png")
+        tk_cImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        imgLabel.config(image=tk_cImg)    
+    #Rain    
+    elif(con == "light rain" or con == "rain" or con == "moderate rain" or con == "light intensity shower rain" or con == "shower rain" or con == "ragged shower rain"):
+        global tk_rainImg
+        Img = Image.open("images/cloudRain.png")
+        tk_rainImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        imgLabel.config(image=tk_rainImg)
+    #Clear    
+    elif(con == "clear sky"):
+        global tk_clearImg
+        Img = Image.open("images/clearNight.png")
+        tk_clearImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        imgLabel.config(image=tk_clearImg)  
+    #Atmosphere    
+    elif(con == "mist" or con == "smoke" or con == "fog" or con == "haze"):
+        global tk_mistImg
+        Img = Image.open("images/smokeFoggy.png")
+        tk_mistImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        imgLabel.config(image=tk_mistImg)
+    elif(con == "sand" or con == "sand/ dust whirls" or con == "dust" or con == "volcanic ash"):
+        global tk_sandImg
+        Img = Image.open("images/sand.png")
+        tk_sandImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        imgLabel.config(image=tk_sandImg) 
+    elif(con == "tornado"):
+        global tk_tornadoImg
+        Img = Image.open("images/tornado.png")
+        tk_tornadoImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        imgLabel.config(image=tk_tornadoImg)              
+    #Snow           
+    elif(con == "light snow" or con == "snow" or con == "heavy snow" or con == "rain and snow" or con == "heavy shower snow"):
+        global tk_snowImg
+        Img = Image.open("images/snow.png")
+        tk_snowImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        imgLabel.config(image=tk_snowImg)
+    elif(con == "sleet" or con == "light shower sleet" or con == "shower sleet" or con == "light rain and snow" or con == "light shower snow" or con == "shower snow"):
+        global tk_snowflakeImg
+        Img = Image.open("images/snowflake.png")
+        tk_snowflakeImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        imgLabel.config(image=tk_snowflakeImg)    
+
+
+def weatherCall():
+    try:
+        city = city_entry.get()
+        
+        url = "http://api.openweathermap.org/data/2.5/weather?q={}&mode=json&appid=606fbbff84c0cd0b13c4a6677cb33928".format(city)
+        
+        res = requests.get(url)
+
+        data = res.json()
+
+        temperature = data["main"]["temp"]
+        TempCelcius = round(temperature - 273.15)
+
+        #CityName
+        cityLabel = Label(frame_main, text=city_entry.get() , font=("Arial" , 18), bg="lightgrey")
+        cityLabel.grid(row=0,columnspan=2, sticky="NSWE")
+
+        #TempLabel
+        tempLabel = Label(frame_main, text="Temperature: ", font=("Arial" , 16), bg="lightgrey")
+        tempLabel.grid(row=1,column=0, sticky="NSE")
+
+        #TempResult
+        tempResult = Label(frame_main, text=(str(TempCelcius) + " ℃"), font=("Arial" , 16), bg="lightgrey")
+        tempResult.grid(row=1,column=1, sticky="NSWE")
+
+        wind_speed = round(data["wind"]["speed"] * 3.6)
+
+        #WindLabel
+        windLabel = Label(frame_main, text="Wind Speed: ", font=("Arial" , 16), bg="lightgrey")
+        windLabel.grid(row=2,column=0, sticky="NSE")
+        
+        #WindResult
+        windResult = Label(frame_main, text=(str(wind_speed) + " km/h"), font=("Arial" , 16), bg="lightgrey")
+        windResult.grid(row=2,column=1, sticky="NSWE")
+
+        main_weather = data["weather"][0]["main"]
+
+        #MainLabel
+        mainLabel = Label(frame_main, text="Main Weather: ", font=("Arial" , 16), bg="lightgrey")
+        mainLabel.grid(row=3,column=0, sticky="NSWE")
+        
+        #MainResult
+        mainResult = Label(frame_main, text=main_weather, font=("Arial" , 16), bg="lightgrey")
+        mainResult.grid(row=3,column=1, sticky="NSWE")
+
+        description = data["weather"][0]["description"]
+
+        #DescLabel
+        descLabel = Label(frame_main, text="Description: ", font=("Arial" , 16), bg="lightgrey")
+        descLabel.grid(row=4,column=0, sticky="NSE")
+        
+        #DescResult
+        descResult = Label(frame_main, text=description, font=("Arial" , 16), bg="lightgrey")
+        descResult.grid(row=4,column=1, sticky="NSWE")
+
+        city_entry.delete(0, END)
+
+        conditions(description)
+
+    except:
+        messagebox.showerror("Invalid input", "Please give a city name only!") 
+        #welcome.config(text="Discover the weather\n in any city" , font=("Arial" , 22), bg="lightgrey")
+
+
+
 
 def search():
 
@@ -27,16 +155,11 @@ def search():
         messagebox.showinfo("Info","Please enter a city!")
         return
 
-    try:
-        #Results Frame
-        result_frame = Frame(root, background="orange")
-        l = Label(result_frame, text="Results")
-        l.pack(fill="x", pady=5)
-        result_frame.place(x=100, y=100)
+    welcome.destroy()
+    frame_w.destroy()
 
-
-    except:
-        messagebox.showerror("Invalid input", "Please give a city name only!")    
+    weatherCall()
+           
 
 
 #Frame Header
@@ -45,24 +168,41 @@ frame_header.place(x=300, y=20, anchor=N)
 
 #Frame Bottom
 frame_bottom = Frame(root, background="orange")
-frame_bottom.place(x=300, y=540, anchor=CENTER)
+frame_bottom.place(x=300, y=440, anchor=CENTER)
 
 #Frame Main
-frame_main = Frame(root)
+frame_main = Frame(root, padx=40 , pady= 10, bg="lightgrey")
+frame_main.place(x=220, y=240, anchor=CENTER)
+
+#Frame Img
+frame_img = Frame(root)
+frame_img.place(x=410, y=175)
+
+#Frame Welcome
+frame_w = Frame(root)
+frame_w.place(x=160, y=180)
+
+#Initialize imgLabel
+imgLabel = Label(frame_img, padx=3,pady=3, bg="lightgrey")
+imgLabel.pack()
+
+#Welcome Label
+welcome = Label(frame_w, text="Discover the weather\n in any city" , font=("Arial" , 22), bg="lightgrey")
+welcome.pack(anchor=CENTER)
 
 
 #Clock
-my_clock = Label(frame_bottom, text="Clock", width=30, font=("Arial" , 10), height=3)
+my_clock = Label(frame_bottom, text="Clock", width=30, font=("Arial" , 14), height=3)
 my_clock.pack(padx=3, pady=3)
 
 
 #Title
-titleLabel = Label(frame_header, text="My Weather App", font=("Arial", 18))
+titleLabel = Label(frame_header, text="My Weather App", font=("Arial", 20))
 titleLabel.grid(row=0, column=0, columnspan=4)
 
 
 #City Label
-city_label = Label(frame_header, text="Enter City:")
+city_label = Label(frame_header, text="Enter City:", font=("Arial", 10))
 city_label.grid(row=1, column=0)
 
 #Input Field
@@ -72,7 +212,7 @@ city_entry.grid(row=1, column=1)
 #Search button
 search_btn = Button(frame_header, text="Search", command=search)
 img = Image.open("images/search.png")
-img2 = img.resize((25, 25), Image.ANTIALIAS)
+img2 = img.resize((30, 30), Image.ANTIALIAS)
 tk_image = ImageTk.PhotoImage(img2)
 search_btn.config(image=tk_image)
 search_btn.grid(row=1, column=3)
