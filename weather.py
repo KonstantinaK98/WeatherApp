@@ -104,7 +104,7 @@ def conditions(con):
         tk_snowflakeImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
         imgLabel.config(image=tk_snowflakeImg)  
     #Thunderstorm
-    elif(con == "thunderstorm with light rain" or con == "thunderstorm with rain" or con == "thunderstorm with heavy rain"):
+    elif(con == "thunderstorm" or con == "thunderstorm with light rain" or con == "thunderstorm with rain" or con == "thunderstorm with heavy rain"):
         global tk_thunderImg
         Img = Image.open("images/cloudStorm.png")
         tk_thunderImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
@@ -128,7 +128,7 @@ def weatherCall():
         frame_w.destroy()
 
         #CityName
-        cityLabel = Label(frame_main, text=city_entry.get() , font=("Arial" , 18), bg="lightgrey")
+        cityLabel = Label(frame_main, text=city_entry.get().upper() , font=("Arial" , 18), bg="lightgrey")
         cityLabel.grid(row=0,columnspan=2, sticky="NSWE")
 
         #TempLabel
