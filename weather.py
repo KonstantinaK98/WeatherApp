@@ -23,13 +23,25 @@ def clock():
     my_clock.after(1000,clock)
 
 
+def createWelcomeFrame():
+    global frame_w
+    global welcome
+    #Frame Welcome
+    frame_w = Frame(root)
+    frame_w.place(x=160, y=180)
+
+    #Welcome Label
+    welcome = Label(frame_w, text="Discover the weather\n in any city" , font=("Arial" , 22), bg="lightgrey")
+    welcome.pack(anchor=CENTER)
+
+
 def conditions(con):
     global imgLabel
     con = con.lower()
     #Clouds
     if(con == "few clouds"):
         global tk_cloudImg
-        if(hour > "18"):
+        if(hour >= "18" or hour < "6"):
             Img = Image.open("images/nightCloud.png")
             tk_cloudImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
             imgLabel.config(image=tk_cloudImg)
@@ -48,12 +60,22 @@ def conditions(con):
         Img = Image.open("images/cloudRain.png")
         tk_rainImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
         imgLabel.config(image=tk_rainImg)
+    elif(con == "heavy intensity rain" or con == "very heavy rain" or con == "extreme rain" or con == "freezing rain" or con == "heavy intensity shower rain"):
+        global tk_hrainImg
+        Img = Image.open("images/heavyRain.png")
+        tk_hrainImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        imgLabel.config(image=tk_hrainImg)    
     #Clear    
     elif(con == "clear sky"):
         global tk_clearImg
-        Img = Image.open("images/clearNight.png")
-        tk_clearImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
-        imgLabel.config(image=tk_clearImg)  
+        if(hour >= "18" or hour < "6"):
+            Img = Image.open("images/clearNight.png")
+            tk_clearImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+            imgLabel.config(image=tk_clearImg) 
+        else:
+            Img = Image.open("images/sun.png")
+            tk_clearImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+            imgLabel.config(image=tk_clearImg)     
     #Atmosphere    
     elif(con == "mist" or con == "smoke" or con == "fog" or con == "haze"):
         global tk_mistImg
@@ -80,11 +102,17 @@ def conditions(con):
         global tk_snowflakeImg
         Img = Image.open("images/snowflake.png")
         tk_snowflakeImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
-        imgLabel.config(image=tk_snowflakeImg)    
+        imgLabel.config(image=tk_snowflakeImg)  
+    #Thunderstorm
+    elif(con == "thunderstorm with light rain" or con == "thunderstorm with rain" or con == "thunderstorm with heavy rain"):
+        global tk_thunderImg
+        Img = Image.open("images/cloudStorm.png")
+        tk_thunderImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        imgLabel.config(image=tk_thunderImg)       
 
 
 def weatherCall():
-    try:
+    try:            
         city = city_entry.get()
         
         url = "http://api.openweathermap.org/data/2.5/weather?q={}&mode=json&appid=606fbbff84c0cd0b13c4a6677cb33928".format(city)
@@ -95,6 +123,9 @@ def weatherCall():
 
         temperature = data["main"]["temp"]
         TempCelcius = round(temperature - 273.15)
+
+        welcome.destroy()
+        frame_w.destroy()
 
         #CityName
         cityLabel = Label(frame_main, text=city_entry.get() , font=("Arial" , 18), bg="lightgrey")
@@ -144,20 +175,19 @@ def weatherCall():
 
     except:
         messagebox.showerror("Invalid input", "Please give a city name only!") 
-        #welcome.config(text="Discover the weather\n in any city" , font=("Arial" , 22), bg="lightgrey")
+        city_entry.delete(0, END)
+        if(not Frame.winfo_ismapped(frame_main)):
+            createWelcomeFrame()
+            return   
 
 
 
-
-def search():
+def search(self):
 
     if(city_entry.get() == ""):
         messagebox.showinfo("Info","Please enter a city!")
         return
-
-    welcome.destroy()
-    frame_w.destroy()
-
+    
     weatherCall()
            
 
@@ -171,6 +201,7 @@ frame_bottom = Frame(root, background="orange")
 frame_bottom.place(x=300, y=440, anchor=CENTER)
 
 #Frame Main
+global frame_main
 frame_main = Frame(root, padx=40 , pady= 10, bg="lightgrey")
 frame_main.place(x=220, y=240, anchor=CENTER)
 
@@ -178,28 +209,19 @@ frame_main.place(x=220, y=240, anchor=CENTER)
 frame_img = Frame(root)
 frame_img.place(x=410, y=175)
 
-#Frame Welcome
-frame_w = Frame(root)
-frame_w.place(x=160, y=180)
+createWelcomeFrame()
 
 #Initialize imgLabel
 imgLabel = Label(frame_img, padx=3,pady=3, bg="lightgrey")
 imgLabel.pack()
 
-#Welcome Label
-welcome = Label(frame_w, text="Discover the weather\n in any city" , font=("Arial" , 22), bg="lightgrey")
-welcome.pack(anchor=CENTER)
-
-
 #Clock
 my_clock = Label(frame_bottom, text="Clock", width=30, font=("Arial" , 14), height=3)
 my_clock.pack(padx=3, pady=3)
 
-
 #Title
 titleLabel = Label(frame_header, text="My Weather App", font=("Arial", 20))
 titleLabel.grid(row=0, column=0, columnspan=4)
-
 
 #City Label
 city_label = Label(frame_header, text="Enter City:", font=("Arial", 10))
@@ -208,6 +230,7 @@ city_label.grid(row=1, column=0)
 #Input Field
 city_entry = Entry(frame_header, width=40)
 city_entry.grid(row=1, column=1)
+city_entry.bind('<Return>',search)
 
 #Search button
 search_btn = Button(frame_header, text="Search", command=search)
