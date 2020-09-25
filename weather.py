@@ -41,12 +41,12 @@ def conditions(con):
     #Clouds
     if(con == "few clouds"):
         global tk_cloudImg
-        if(hour >= "18" or hour < "6"):
-            Img = Image.open("images/nightCloud.png")
+        if(hour >= "06" and hour <= "18"):
+            Img = Image.open("images/sunCloud.png")
             tk_cloudImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
             imgLabel.config(image=tk_cloudImg)
         else:
-            Img = Image.open("images/sunCloud.png")    
+            Img = Image.open("images/nightCloud.png")    
             tk_cloudImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
             imgLabel.config(image=tk_cloudImg)
     elif(con == "scattered clouds" or con == "broken clouds" or con == "overcast clouds"):
@@ -68,12 +68,12 @@ def conditions(con):
     #Clear    
     elif(con == "clear sky"):
         global tk_clearImg
-        if(hour >= "18" or hour < "6"):
-            Img = Image.open("images/clearNight.png")
+        if(hour >= "06" and hour <= "18"):
+            Img = Image.open("images/sun.png")
             tk_clearImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
             imgLabel.config(image=tk_clearImg) 
         else:
-            Img = Image.open("images/sun.png")
+            Img = Image.open("images/clearNight.png")
             tk_clearImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
             imgLabel.config(image=tk_clearImg)     
     #Atmosphere    
