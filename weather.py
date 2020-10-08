@@ -169,6 +169,16 @@ def weatherCall():
         descResult = Label(frame_main, text=description, font=("Arial" , 16), bg="lightgrey")
         descResult.grid(row=4,column=1, sticky="NSWE")
 
+        country = data["sys"]["country"]
+
+        #CountryLabel
+        countryLabel = Label(frame_main, text="Country: ", font=("Arial" , 16), bg="lightgrey")
+        countryLabel.grid(row=5,column=0, sticky="NSE")
+        
+        #CountryResult
+        countryResult = Label(frame_main, text=country, font=("Arial" , 16), bg="lightgrey")
+        countryResult.grid(row=5,column=1, sticky="NSWE")
+
         city_entry.delete(0, END)
 
         conditions(description)
@@ -182,14 +192,14 @@ def weatherCall():
 
 
 
-def search(self):
+def search(*self):
 
     if(city_entry.get() == ""):
         messagebox.showinfo("Info","Please enter a city!")
         return
     
     weatherCall()
-           
+
 
 
 #Frame Header
