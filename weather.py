@@ -115,7 +115,7 @@ def weatherCall():
     try:            
         city = city_entry.get()
         
-        url = "http://api.openweathermap.org/data/2.5/weather?q={}&mode=json&appid=606fbbff84c0cd0b13c4a6677cb33928".format(city)
+        url = "http://api.openweathermap.org/data/2.5/weather?q={}&mode=json&appid=YOUR_APP_ID".format(city)
         
         res = requests.get(url)
 
