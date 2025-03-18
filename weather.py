@@ -43,71 +43,71 @@ def conditions(con):
         global tk_cloudImg
         if(hour >= "06" and hour <= "18"):
             Img = Image.open("images/sunCloud.png")
-            tk_cloudImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+            tk_cloudImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
             imgLabel.config(image=tk_cloudImg)
         else:
             Img = Image.open("images/nightCloud.png")    
-            tk_cloudImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+            tk_cloudImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
             imgLabel.config(image=tk_cloudImg)
     elif(con == "scattered clouds" or con == "broken clouds" or con == "overcast clouds"):
         global tk_cImg
         Img = Image.open("images/cloud.png")
-        tk_cImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        tk_cImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
         imgLabel.config(image=tk_cImg)    
     #Rain    
     elif(con == "light rain" or con == "rain" or con == "moderate rain" or con == "light intensity shower rain" or con == "shower rain" or con == "ragged shower rain"):
         global tk_rainImg
         Img = Image.open("images/cloudRain.png")
-        tk_rainImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        tk_rainImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
         imgLabel.config(image=tk_rainImg)
     elif(con == "heavy intensity rain" or con == "very heavy rain" or con == "extreme rain" or con == "freezing rain" or con == "heavy intensity shower rain"):
         global tk_hrainImg
         Img = Image.open("images/heavyRain.png")
-        tk_hrainImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        tk_hrainImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
         imgLabel.config(image=tk_hrainImg)    
     #Clear    
     elif(con == "clear sky"):
         global tk_clearImg
         if(hour >= "06" and hour <= "18"):
             Img = Image.open("images/sun.png")
-            tk_clearImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+            tk_clearImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
             imgLabel.config(image=tk_clearImg) 
         else:
             Img = Image.open("images/clearNight.png")
-            tk_clearImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+            tk_clearImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
             imgLabel.config(image=tk_clearImg)     
     #Atmosphere    
     elif(con == "mist" or con == "smoke" or con == "fog" or con == "haze"):
         global tk_mistImg
         Img = Image.open("images/smokeFoggy.png")
-        tk_mistImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        tk_mistImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
         imgLabel.config(image=tk_mistImg)
     elif(con == "sand" or con == "sand/ dust whirls" or con == "dust" or con == "volcanic ash"):
         global tk_sandImg
         Img = Image.open("images/sand.png")
-        tk_sandImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        tk_sandImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
         imgLabel.config(image=tk_sandImg) 
     elif(con == "tornado"):
         global tk_tornadoImg
         Img = Image.open("images/tornado.png")
-        tk_tornadoImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        tk_tornadoImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
         imgLabel.config(image=tk_tornadoImg)              
     #Snow           
     elif(con == "light snow" or con == "snow" or con == "heavy snow" or con == "rain and snow" or con == "heavy shower snow"):
         global tk_snowImg
         Img = Image.open("images/snow.png")
-        tk_snowImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        tk_snowImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
         imgLabel.config(image=tk_snowImg)
     elif(con == "sleet" or con == "light shower sleet" or con == "shower sleet" or con == "light rain and snow" or con == "light shower snow" or con == "shower snow"):
         global tk_snowflakeImg
         Img = Image.open("images/snowflake.png")
-        tk_snowflakeImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        tk_snowflakeImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
         imgLabel.config(image=tk_snowflakeImg)  
     #Thunderstorm
     elif(con == "thunderstorm" or con == "thunderstorm with light rain" or con == "thunderstorm with rain" or con == "thunderstorm with heavy rain"):
         global tk_thunderImg
         Img = Image.open("images/cloudStorm.png")
-        tk_thunderImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.ANTIALIAS))
+        tk_thunderImg = ImageTk.PhotoImage(Img.resize((125, 125), Image.Resampling.LANCZOS))
         imgLabel.config(image=tk_thunderImg)       
 
 
@@ -245,7 +245,7 @@ city_entry.bind('<Return>',search)
 #Search button
 search_btn = Button(frame_header, text="Search", command=search)
 img = Image.open("images/search.png")
-img2 = img.resize((30, 30), Image.ANTIALIAS)
+img2 = img.resize((30, 30), Image.Resampling.LANCZOS)
 tk_image = ImageTk.PhotoImage(img2)
 search_btn.config(image=tk_image)
 search_btn.grid(row=1, column=3)
